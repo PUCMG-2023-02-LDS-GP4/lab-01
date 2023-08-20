@@ -15,5 +15,5 @@
 
 ## Documentos Relevantes
 
-* [Casos de Uso](..\projeto\versao-1.pdf)
-* [Histórias de Usuário](..\projeto\hist-de-usuario.md)
+* [Casos de Uso](\projeto\versao-1.pdf)
+* [Histórias de Usuário](\projeto\hist-de-usuario.md)
