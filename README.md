@@ -1,6 +1,4 @@
-# Projeto 1 - Sistema de Matrículas
-
-	 
+# Projeto 1 - Sistema de Matrículas	 
   
 ## Alunos integrantes da equipe
 
@@ -14,3 +12,8 @@
 ## Professora responsável
 
 * Aline Norberta de Brito
+
+## Documentos Relevantes
+*
+[Casos de Uso](projeto\versao-1.pdf)
+[Histórias de Usuário](projeto\hist-de-usuario.md)
