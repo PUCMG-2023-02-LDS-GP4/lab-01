@@ -1,14 +1,16 @@
-Projeto 1 - Sistema de Matrículas
+# Projeto 1 - Sistema de Matrículas
 
+	 
+  
+## Alunos integrantes da equipe
 
-Integrantes:
+* Augusto Baldiotti Mendonça Alvares
+* Caio Elias Rodrigues Araujo
+* Daniel de Rezende Leao
+* Gabriel Estevão Nogueira Sobrinho
+* Juliana Serra Camargo Gomes
+* Luana Fleury
 
-Augusto Baldiotti Mendonça Alvares
+## Professora responsável
 
-Caio Elias Rodrigues Araujo
-
-Daniel de Rezende Leao
-
-Gabriel Estevão Nogueira Sobrinho
-
-Luana Fleury
+* Aline Norberta de Brito
