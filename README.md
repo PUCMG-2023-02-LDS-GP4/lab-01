@@ -17,3 +17,4 @@
 
 * [Casos de Uso](https://github.com/PUCMG-2023-02-LDS-GP4/lab-01/blob/main/projeto/versao-1.pdf)
 * [Histórias de Usuário](https://github.com/PUCMG-2023-02-LDS-GP4/lab-01/blob/main/projeto/hist-de-usuario.md)
+* ![image](https://github.com/PUCMG-2023-02-LDS-GP4/lab-01/blob/main/projeto/versao-1.pdf)
