@@ -1,45 +1,33 @@
 package business;
 
+import exceptions.ExcecaoDisciplinaFechada;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Aluno extends Usuario{
+
+    // Declaração de variáveis
     private String nome;
     private String usuario;
     private String senha;
     private int codMatricula;
     private List<Disciplina> disciplinas;
 
-    public Aluno(String nome, String usuario, String senha, int codMatricula, List<Disciplina> disciplinas) {
-        this.nome = nome;
-        this.usuario = usuario;
-        this.senha = senha;
+    // Construtores
+
+    public Aluno(String nome, String usuario, String senha, int codMatricula) {
+        super(nome, usuario, senha);
         this.codMatricula = codMatricula;
-        this.disciplinas = disciplinas;
+        this.disciplinas = new ArrayList<Disciplina>();
     }
 
-    public String getNome() {
-        return nome;
+    public Aluno(String nome, String usuario, String senha) {
+        super(nome, usuario, senha);
+
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    // Getters e Setters
 
     public int getCodMatricula() {
         return codMatricula;
@@ -57,6 +45,21 @@ public class Aluno extends Usuario{
         this.disciplinas = disciplinas;
     }
 
-    public void matricular(Disciplina d){}
+    // Metodos
+
+    /**
+     * Função responsável por matricular um aluno na disciplina
+     * @param d - Disciplina a ser adicionada no curriculo do aluno
+     * @throws ExcecaoDisciplinaFechada - exceção responsável por indicar que a disciplina não está com inscrições abertas.
+     */
+
+    public void matricular(Disciplina d) throws ExcecaoDisciplinaFechada {
+        if(d.isInscricoesAbertas()){
+            this.disciplinas.add(d);
+            d.getAlunos().add(this);
+        }else{
+            throw new ExcecaoDisciplinaFechada();
+        }
+    }
 
 }

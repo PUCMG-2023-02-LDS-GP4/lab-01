@@ -1,44 +1,28 @@
 package business;
 
+import exceptions.ExcecaoDisciplinaComProfessor;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Professor extends Usuario{
-    private String nome;
-    private String usuario;
-    private String senha;
+
+    // Declaração de variáveis
 
     private List<Disciplina> disciplinasLecionadas;
 
+    // Construtores
     public Professor(String nome, String usuario, String senha, List<Disciplina> disciplinasLecionadas) {
-        this.nome = nome;
-        this.usuario = usuario;
-        this.senha = senha;
+        super(nome, usuario, senha);
         this.disciplinasLecionadas = disciplinasLecionadas;
     }
 
-    public String getNome() {
-        return nome;
+    public Professor(String nome, String usuario, String senha) {
+        super(nome, usuario, senha);
+        this.disciplinasLecionadas = new ArrayList<Disciplina>();
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    // Getters e Setters
 
     public List<Disciplina> getDisciplinasLecionadas() {
         return disciplinasLecionadas;
@@ -48,5 +32,18 @@ public class Professor extends Usuario{
         this.disciplinasLecionadas = disciplinasLecionadas;
     }
 
-    public void lecionar(Disciplina d){}
+    // Metódos
+
+    /** Função responsável por adicionar uma disciplina à lista de disciplinadas lecionadas do professor.
+     * @param  d - Disciplina a ser lecionada.
+     * @throws ExcecaoDisciplinaComProfessor - exceção responsável por indicar que existe um professor lecionando a disciplina em questão.
+     **/
+    public void lecionar(Disciplina d) throws ExcecaoDisciplinaComProfessor {
+        if(!d.possuiProfessor()){
+            this.disciplinasLecionadas.add(d);
+        } else{
+            throw new ExcecaoDisciplinaComProfessor();
+        }
+
+    }
 }
