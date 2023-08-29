@@ -1,9 +1,12 @@
 package business;
 
 import exceptions.ExcecaoDisciplinaFechada;
+import exceptions.ExcecaoDisciplinaNaoExistente;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Aluno extends Usuario{
 
@@ -12,14 +15,14 @@ public class Aluno extends Usuario{
     private String usuario;
     private String senha;
     private int codMatricula;
-    private List<Disciplina> disciplinas;
+    private Map<Integer,Disciplina> disciplinas;
 
     // Construtores
 
     public Aluno(String nome, String usuario, String senha, int codMatricula) {
         super(nome, usuario, senha);
         this.codMatricula = codMatricula;
-        this.disciplinas = new ArrayList<Disciplina>();
+        this.disciplinas = new HashMap<Integer,Disciplina>();
     }
 
     public Aluno(String nome, String usuario, String senha) {
@@ -37,11 +40,11 @@ public class Aluno extends Usuario{
         this.codMatricula = codMatricula;
     }
 
-    public List<Disciplina> getDisciplinas() {
+    public Map<Integer,Disciplina> getDisciplinas() {
         return disciplinas;
     }
 
-    public void setDisciplinas(List<Disciplina> disciplinas) {
+    public void setDisciplinas(Map<Integer,Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
 
@@ -55,10 +58,24 @@ public class Aluno extends Usuario{
 
     public void matricular(Disciplina d) throws ExcecaoDisciplinaFechada {
         if(d.isInscricoesAbertas()){
-            this.disciplinas.add(d);
-            d.getAlunos().add(this);
+            this.disciplinas.put(d.getId(),d);
+            d.getAlunos().put(this.getCodMatricula(),this);
         }else{
             throw new ExcecaoDisciplinaFechada();
+        }
+    }
+
+    /**
+     * Função para trancar a matrícula do aluno em alguma disciplina
+     * @param id - Identificador da disciplina a ser trancada
+     * @throws ExcecaoDisciplinaNaoExistente - exceção responsável por indicar que a disciplina com id informado não existe.
+     */
+
+    public void trancarMatricula(int id) throws ExcecaoDisciplinaNaoExistente {
+        if(this.getDisciplinas().containsKey(id)){
+            this.disciplinas.remove(id);
+        }else{
+            throw new ExcecaoDisciplinaNaoExistente();
         }
     }
 

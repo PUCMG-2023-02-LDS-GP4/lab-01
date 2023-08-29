@@ -3,32 +3,34 @@ package business;
 import exceptions.ExcecaoDisciplinaComProfessor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Professor extends Usuario{
 
     // Declaração de variáveis
 
-    private List<Disciplina> disciplinasLecionadas;
+    private Map<Integer, Disciplina> disciplinasLecionadas;
 
     // Construtores
-    public Professor(String nome, String usuario, String senha, List<Disciplina> disciplinasLecionadas) {
+    public Professor(String nome, String usuario, String senha, Map<Integer,Disciplina> disciplinasLecionadas) {
         super(nome, usuario, senha);
         this.disciplinasLecionadas = disciplinasLecionadas;
     }
 
     public Professor(String nome, String usuario, String senha) {
         super(nome, usuario, senha);
-        this.disciplinasLecionadas = new ArrayList<Disciplina>();
+        this.disciplinasLecionadas = new HashMap<Integer,Disciplina>();
     }
 
     // Getters e Setters
 
-    public List<Disciplina> getDisciplinasLecionadas() {
+    public Map<Integer,Disciplina> getDisciplinasLecionadas() {
         return disciplinasLecionadas;
     }
 
-    public void setDisciplinasLecionadas(List<Disciplina> disciplinasLecionadas) {
+    public void setDisciplinasLecionadas(Map<Integer,Disciplina> disciplinasLecionadas) {
         this.disciplinasLecionadas = disciplinasLecionadas;
     }
 
@@ -40,7 +42,7 @@ public class Professor extends Usuario{
      **/
     public void lecionar(Disciplina d) throws ExcecaoDisciplinaComProfessor {
         if(!d.possuiProfessor()){
-            this.disciplinasLecionadas.add(d);
+            this.disciplinasLecionadas.put(d.getId(), d);
         } else{
             throw new ExcecaoDisciplinaComProfessor();
         }

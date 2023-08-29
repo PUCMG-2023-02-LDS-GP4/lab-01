@@ -3,27 +3,28 @@ package business;
 import exceptions.ExcecaoDisciplinaCheia;
 import exceptions.ExcecaoQuantidadeAlunosExcessiva;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Disciplina {
 
 
     // Declaração de variáveis
     private String nome;
-    private List<Aluno> alunos;
+    private int id;
+    private Map<Integer,Aluno> alunos;
     private Professor professor;
     private boolean inscricoesAbertas;
     private boolean obrigatoria;
 
     // Construtor
 
-    public Disciplina(String nome, List<Aluno> alunos, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) throws ExcecaoQuantidadeAlunosExcessiva {
+    public Disciplina(String nome, Map<Integer,Aluno> alunos, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) throws ExcecaoQuantidadeAlunosExcessiva {
 
         if(alunos.size() > 60){
             throw new ExcecaoQuantidadeAlunosExcessiva();
         }else{
             this.nome = nome;
+            this.id = new Random().nextInt(101);
             this.alunos = alunos;
             this.professor = professor;
             this.inscricoesAbertas = inscricoesAbertas;
@@ -33,7 +34,8 @@ public class Disciplina {
 
     public Disciplina(String nome, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) {
         this.nome = nome;
-        this.alunos = new ArrayList<Aluno>();
+        this.id = new Random().nextInt(101);
+        this.alunos = new HashMap<Integer,Aluno>();
         this.professor = professor;
         this.inscricoesAbertas = inscricoesAbertas;
         this.obrigatoria = obrigatoria;
@@ -41,7 +43,8 @@ public class Disciplina {
 
     public Disciplina(String nome, boolean inscricoesAbertas, boolean obrigatoria) {
         this.nome = nome;
-        this.alunos = new ArrayList<Aluno>();
+        this.id = new Random().nextInt(101);
+        this.alunos = new HashMap<Integer,Aluno>();
         this.professor = null;
         this.inscricoesAbertas = inscricoesAbertas;
         this.obrigatoria = obrigatoria;
@@ -57,11 +60,19 @@ public class Disciplina {
         this.nome = nome;
     }
 
-    public List<Aluno> getAlunos() {
-        return alunos;
+    public int getId() {
+        return id;
     }
 
-    public void setAlunos(List<Aluno> alunos) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Map<Integer, Aluno> getAlunos() {
+        return this.alunos;
+    }
+
+    public void setAlunos(Map<Integer,Aluno> alunos) {
         this.alunos = alunos;
     }
 
@@ -100,8 +111,8 @@ public class Disciplina {
     **/
 
     public void adicionarAluno(Aluno aluno) throws ExcecaoDisciplinaCheia {
-        if(isObrigatoria()){
-            this.alunos.add(aluno);
+        if(this.alunos.size() < 60){
+            this.alunos.put(aluno.getCodMatricula(), aluno);
         }else{
             throw new ExcecaoDisciplinaCheia();
         }

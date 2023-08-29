@@ -9,14 +9,14 @@ public class Sistema {
     // Declaração de atributos
     private Usuario usuarioAtual;
     private Map<String, Usuario> usuarios;
-    private Set<Curso> cursos;
+    private Map<String,Curso> cursos;
 
     // Construtor
 
     public Sistema(){
         this.usuarioAtual = null;
         this.usuarios = new HashMap<String, Usuario>();
-        this.cursos = new HashSet<Curso>();
+        this.cursos = new HashMap<String, Curso>();
     }
 
     // Getters e Setters
@@ -37,11 +37,11 @@ public class Sistema {
         this.usuarios = usuarios;
     }
 
-    public Set<Curso> getCursos() {
+    public Map<String,Curso> getCursos() {
         return cursos;
     }
 
-    public void setCursos(Set<Curso> cursos) {
+    public void setCursos(Map<String,Curso> cursos) {
         this.cursos = cursos;
     }
 
@@ -94,28 +94,24 @@ public class Sistema {
      * @throws ExcecaoCursoExistente - exceção responsável por indicar a presença de um curso com o nome passado por parâmetro.
      */
 
-    public void adicionarCurso(String nome, int creditos, List<Disciplina> disciplinas) throws ExcecaoCursoExistente {
-        boolean cursoExiste = false;
-        for(Curso c : this.cursos){
-            if(c.getNome().equals(nome)){
-                cursoExiste = true;
-            }
-        }
+    public void adicionarCurso(String nome, int creditos, Map<Integer,Disciplina> disciplinas) throws ExcecaoCursoExistente {
+        boolean cursoExiste = this.cursos.containsKey(nome);
+
         if(cursoExiste){
             throw new ExcecaoCursoExistente();
         }else{
-            this.cursos.add(new Curso(nome, creditos, disciplinas));
+            this.cursos.put(nome,new Curso(nome, creditos, disciplinas));
         }
     }
 
     /**
      * Função responsável por retirar um curso da lista de cursos presentes no sistema.
-     * @param c - curso a ser removido
+     * @param curso - curso a ser removido
      * @throws ExcecaoCursoNaoExistente - exceção responsável por indicar a aûsencia de um usuário presente no sistema referente aos parametros passados.
      */
-    public void removerCurso(Curso c) throws ExcecaoCursoNaoExistente {
-        if(this.cursos.contains(c)){
-            this.cursos.remove(c);
+    public void removerCurso(String curso) throws ExcecaoCursoNaoExistente {
+        if(this.cursos.containsKey(curso)){
+            this.cursos.remove(curso);
         }else{
             throw new ExcecaoCursoNaoExistente();
         }
