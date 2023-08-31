@@ -130,4 +130,10 @@ public class Disciplina {
         return true;
     }
 
+    public List<Aluno> listarAlunos(){
+        List<Aluno> alunos = new ArrayList<>();
+        alunos.addAll(this.getAlunos().values());
+        return alunos;
+    }
+
 }

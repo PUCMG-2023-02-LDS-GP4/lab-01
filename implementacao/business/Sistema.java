@@ -116,4 +116,39 @@ public class Sistema {
             throw new ExcecaoCursoNaoExistente();
         }
     }
+
+    public List<Disciplina> listarDisciplinas(){
+        List<Disciplina> disciplinas = new ArrayList<>();
+
+        for (Curso curso : this.cursos.values()) {
+            for (Disciplina disciplina : curso.getDisciplinas().values()) {
+                disciplinas.add(disciplina);
+            }
+        }
+        return disciplinas;
+    }
+
+    /**
+     *
+     * @param id - id da disciplina a ser listada
+     * @throws ExcecaoSemPermissao - indica que o usuário não tem permissão para fazer a função
+     * @return lista de alunos da disciplina listada
+     */
+    public List<Aluno> listarAlunos(int id) throws ExcecaoSemPermissao {
+        if(this.getUsuarioAtual() instanceof Professor){
+            List<Aluno> alunos = new ArrayList<>();
+            List<Disciplina> todasDisciplinas = this.listarDisciplinas();
+            Disciplina disciplinaSelecionada = new Disciplina("", true, true);
+            for (Disciplina d : todasDisciplinas) {
+                if (d.getId() == id) {
+                    disciplinaSelecionada.setAlunos(d.getAlunos());
+                }
+            }
+            alunos.addAll(disciplinaSelecionada.getAlunos().values());
+            return alunos;
+        }
+        else{
+            throw new ExcecaoSemPermissao();
+        }
+    }
 }
