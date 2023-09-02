@@ -213,6 +213,40 @@ public class Sistema {
         }
     }
 
+     private void lerCursosEDisciplinas(String arquivoCursos, String arquivoDisciplinas) throws IOException, InvalidParameterException {
+
+        // Lendo Cursos
+        try (Scanner scanner = new Scanner(new File(arquivoCursos))) {
+            String linha;
+            while (scanner.hasNextLine()) {
+                linha = scanner.nextLine();
+                String[] campos = linha.split(",");
+                String nome = campos[0];
+                int creditos = campos[1];
+                String senha = campos[2];
+ 
+                Curso curso = new Curso(nome, creditos, senha);
+                this.usuarios.put(id, curso);
+
+            }
+        }
+
+        // Lendo Disciplinas
+        try (Scanner scanner = new Scanner(new File(arquivoDisciplinas))) {
+            String linha;
+            while (scanner.hasNextLine()) {
+                linha = scanner.nextLine();
+                String[] campos = linha.split(",");
+                String nome = campos[0];
+                String usuario = campos[1];
+                String senha = campos[2];
+ 
+                Disciplina disciplinas = new Disciplina(nome, usuario, senha);
+                this.usuarios.put(usuario, professor);
+            }
+        }
+     }
+
     /**
      * Salva as informações dos usuários em arquivos CSV.
      * 

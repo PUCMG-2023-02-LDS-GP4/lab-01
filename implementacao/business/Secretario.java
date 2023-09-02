@@ -13,4 +13,6 @@ public class Secretario extends Usuario{
         super(nome, usuario, senha);
     }
 
+    
+
 }
