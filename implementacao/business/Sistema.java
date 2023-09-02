@@ -2,7 +2,16 @@ package business;
 
 import exceptions.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.InvalidParameterException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Sistema {
 
@@ -13,10 +22,13 @@ public class Sistema {
 
     // Construtor
 
-    public Sistema(){
+    public Sistema() throws IOException, InvalidParameterException{
         this.usuarioAtual = null;
         this.usuarios = new HashMap<String, Usuario>();
         this.cursos = new HashMap<String, Curso>();
+
+        this.lerUsuarios("implementacao/Secretarios.csv", "implementacao/Professores.csv", "implementacao/Alunos.csv");
+        
     }
 
     // Getters e Setters
@@ -151,4 +163,92 @@ public class Sistema {
             throw new ExcecaoSemPermissao();
         }
     }
+
+    private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException {
+
+        // Lendo Secretarios
+        try (Scanner scanner = new Scanner(new File(arquivoSecretarios))) {
+            String linha;
+            while (scanner.hasNextLine()) {
+                linha = scanner.nextLine();
+                String[] campos = linha.split(",");
+                String nome = campos[0];
+                String usuario = campos[1];
+                String senha = campos[2];
+ 
+                Secretario secretario = new Secretario(nome, usuario, senha);
+                this.usuarios.put(usuario, secretario);
+
+            }
+        }
+
+        // Lendo Professores
+        try (Scanner scanner = new Scanner(new File(arquivoProfessores))) {
+            String linha;
+            while (scanner.hasNextLine()) {
+                linha = scanner.nextLine();
+                String[] campos = linha.split(",");
+                String nome = campos[0];
+                String usuario = campos[1];
+                String senha = campos[2];
+ 
+                Professor professor = new Professor(nome, usuario, senha);
+                this.usuarios.put(usuario, professor);
+            }
+        }
+
+        // Lendo Alunos
+        try (Scanner scanner = new Scanner(new File(arquivoAlunos))) {
+            String linha;
+            while (scanner.hasNextLine()) {
+                linha = scanner.nextLine();
+                String[] campos = linha.split(",");
+                String nome = campos[0];
+                String usuario = campos[1];
+                String senha = campos[2];
+ 
+                Aluno aluno = new Aluno(nome, usuario, senha);
+                this.usuarios.put(usuario, aluno);
+            }
+        }
+    }
+
+    /**
+     * Salva as informações dos usuários em arquivos CSV.
+     * 
+     * @throws IOException Exceção lançada em caso de erro ao salvar os arquivos.
+     */
+    public void salvar() throws IOException {
+        Map<String, List<Usuario>> mapaDeUsuarios = new HashMap<>();
+
+        usuarios.forEach((usuario, user) -> {
+            String nomeDaClasse = user.getClass().getSimpleName();
+
+            if (mapaDeUsuarios.containsKey(nomeDaClasse)) {
+                mapaDeUsuarios.get(nomeDaClasse).add(user);
+            } else {
+                List<Usuario> listaDeUsuarios = new ArrayList<>();
+                listaDeUsuarios.add(user);
+                mapaDeUsuarios.put(nomeDaClasse, listaDeUsuarios);
+            }
+        });
+
+        mapaDeUsuarios.keySet().forEach(classe -> {
+            Path nomeDoArquivo = Paths.get("implementacao/" + classe + ".csv");
+            List<Usuario> usuariosDaClasse = mapaDeUsuarios.get(classe);
+
+            try {
+                if (!Files.exists(nomeDoArquivo)) {
+                    Files.createFile(nomeDoArquivo);
+                }
+
+                Files.write(nomeDoArquivo, usuariosDaClasse.stream()
+                                            .map(Object::toString)
+                                            .collect(Collectors.toList()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
 }
