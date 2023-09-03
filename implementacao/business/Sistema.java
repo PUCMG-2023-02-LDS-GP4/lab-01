@@ -165,7 +165,7 @@ public class Sistema {
         }
     }
 
-    private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException, ExcecaoDisciplinaFechada {
+    private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException, ExcecaoDisciplinaFechada, ExcecaoDisciplinaComProfessor {
 
         // Lendo Secretarios
         try (Scanner scanner = new Scanner(new File(arquivoSecretarios))) {
@@ -192,9 +192,18 @@ public class Sistema {
                 String nome = campos[0];
                 String usuario = campos[1];
                 String senha = campos[2];
- 
+                String[] disciplinaStrings = campos[3].split(";");
+
                 Professor professor = new Professor(nome, usuario, senha);
                 this.usuarios.put(usuario, professor);
+                
+                for (String disciplina : disciplinaStrings) {
+                    int id = Integer.parseInt(disciplina.trim());
+                    Disciplina d = disciplinas.get(id);
+                    if (d != null) {
+                        professor.lecionar(d);
+                    }
+                }
             }
         }
 
