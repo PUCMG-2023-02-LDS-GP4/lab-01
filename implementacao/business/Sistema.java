@@ -242,11 +242,20 @@ public class Sistema {
                 linha = scanner.nextLine();
                 String[] campos = linha.split(",");
                 String nome = campos[0];
-                int creditos = campos[1];
-                String senha = campos[2];
+                int id = Integer.parseInt(campos[1]);
+                int creditos = Integer.parseInt(campos[2]);
+                String[] disciplinaStrings = campos[3].split(";");
  
-                Curso curso = new Curso(nome, creditos, senha);
-                this.usuarios.put(id, curso);
+                Curso curso = new Curso(nome, id, creditos);
+                this.cursos.put(nome, curso);
+
+                for (String disciplina : disciplinaStrings) {
+                    int idDisciplina = Integer.parseInt(disciplina.trim());
+                    Disciplina d = disciplinas.get(idDisciplina);
+                    if (d != null) {
+                        curso.adicionarDisciplina(d);
+                    }
+                }
 
             }
         }
