@@ -19,6 +19,7 @@ public class Sistema {
     private Usuario usuarioAtual;
     private Map<String, Usuario> usuarios;
     private Map<String,Curso> cursos;
+    private Map<Integer, Disciplina> disciplinas;
 
     // Construtor
 
@@ -164,7 +165,7 @@ public class Sistema {
         }
     }
 
-    private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException {
+    private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException, ExcecaoDisciplinaFechada {
 
         // Lendo Secretarios
         try (Scanner scanner = new Scanner(new File(arquivoSecretarios))) {
@@ -206,9 +207,19 @@ public class Sistema {
                 String nome = campos[0];
                 String usuario = campos[1];
                 String senha = campos[2];
- 
+                int codMatricula = Integer.parseInt(campos[3]);
+                String[] disciplinaStrings = campos[4].split(";");
+                
                 Aluno aluno = new Aluno(nome, usuario, senha);
                 this.usuarios.put(usuario, aluno);
+                
+                for (String disciplina : disciplinaStrings) {
+                    int id = Integer.parseInt(disciplina.trim());
+                    Disciplina d = disciplinas.get(id);
+                    if (d != null) {
+                        aluno.matricular(d);
+                    }
+                }
             }
         }
     }
@@ -238,7 +249,7 @@ public class Sistema {
                 linha = scanner.nextLine();
                 String[] campos = linha.split(",");
                 String nome = campos[0];
-                String usuario = campos[1];
+                int id = campos[1];
                 String senha = campos[2];
  
                 Disciplina disciplinas = new Disciplina(nome, usuario, senha);
@@ -268,7 +279,7 @@ public class Sistema {
         });
 
         mapaDeUsuarios.keySet().forEach(classe -> {
-            Path nomeDoArquivo = Paths.get("implementacao/" + classe + ".csv");
+            Path nomeDoArquivo = Paths.get("implementacao/" + classe + "s.csv");
             List<Usuario> usuariosDaClasse = mapaDeUsuarios.get(classe);
 
             try {
