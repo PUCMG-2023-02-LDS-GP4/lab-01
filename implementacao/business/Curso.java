@@ -25,6 +25,13 @@ public class Curso {
         this.disciplinas = disciplinas;
     }
 
+    public Curso(String nome, int id, int creditos) {
+        this.nome = nome;
+        this.id = id;
+        this.creditos = creditos;
+        this.disciplinas = null;
+    }
+
     // Getters e Setters
 
     public String getNome() {

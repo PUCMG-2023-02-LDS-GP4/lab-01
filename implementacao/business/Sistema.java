@@ -258,10 +258,13 @@ public class Sistema {
                 linha = scanner.nextLine();
                 String[] campos = linha.split(",");
                 String nome = campos[0];
-                int id = campos[1];
+                int id = Integer.parseInt(campos[1]);
                 String senha = campos[2];
- 
-                Disciplina disciplinas = new Disciplina(nome, usuario, senha);
+                String professor = campos[3];
+                int inscricoesAbertas = Integer.parseInt(campos[4]);
+                int obrigatoria = Integer.parseInt(campos[5]);
+
+                Disciplina disciplinas = new Disciplina(nome, id, senha, professor, inscricoesAbertas, obrigatoria);
                 this.usuarios.put(usuario, professor);
             }
         }
