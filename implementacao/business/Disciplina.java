@@ -11,6 +11,7 @@ public class Disciplina {
     // Declaração de variáveis
     private String nome;
     private int id;
+    private Curso curso;
     private Map<Integer,Aluno> alunos;
     private Professor professor;
     private boolean inscricoesAbertas;
@@ -18,12 +19,13 @@ public class Disciplina {
 
     // Construtor
 
-    public Disciplina(String nome, Map<Integer,Aluno> alunos, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) throws ExcecaoQuantidadeAlunosExcessiva {
+    public Disciplina(String nome,Curso curso,Map<Integer,Aluno> alunos, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) throws ExcecaoQuantidadeAlunosExcessiva {
 
         if(alunos.size() > 60){
             throw new ExcecaoQuantidadeAlunosExcessiva();
         }else{
             this.nome = nome;
+            this.curso = curso;
             this.id = new Random().nextInt(101);
             this.alunos = alunos;
             this.professor = professor;
@@ -32,8 +34,9 @@ public class Disciplina {
         }
     }
 
-    public Disciplina(String nome, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) {
+    public Disciplina(String nome,Curso curso, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) {
         this.nome = nome;
+        this.curso = curso;
         this.id = new Random().nextInt(101);
         this.alunos = new HashMap<Integer,Aluno>();
         this.professor = professor;
@@ -41,11 +44,22 @@ public class Disciplina {
         this.obrigatoria = obrigatoria;
     }
 
-    public Disciplina(String nome, boolean inscricoesAbertas, boolean obrigatoria) {
+    public Disciplina(String nome,Curso curso, boolean inscricoesAbertas, boolean obrigatoria) {
         this.nome = nome;
+        this.curso = curso;
         this.id = new Random().nextInt(101);
         this.alunos = new HashMap<Integer,Aluno>();
         this.professor = null;
+        this.inscricoesAbertas = inscricoesAbertas;
+        this.obrigatoria = obrigatoria;
+    }
+
+    public Disciplina(String nome, int id, Curso curso, Map<Integer, Aluno> alunos, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) {
+        this.nome = nome;
+        this.id = id;
+        this.curso = curso;
+        this.alunos = alunos;
+        this.professor = professor;
         this.inscricoesAbertas = inscricoesAbertas;
         this.obrigatoria = obrigatoria;
     }
@@ -101,7 +115,13 @@ public class Disciplina {
         this.obrigatoria = obrigatoria;
     }
 
+    public Curso getCurso() {
+        return curso;
+    }
 
+    public void setCurso(Curso curso) {
+        this.curso = curso;
+    }
 
     // Metodos
 
