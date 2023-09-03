@@ -2,8 +2,7 @@ package business;
 
 import exceptions.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,6 +20,9 @@ public class Sistema {
     private Map<String,Curso> cursos;
     private Map<Integer, Disciplina> disciplinas;
 
+    private static final String arqUsuario = "implementacao/files/usuarios.txt";
+    private static final String arqCursos = "implementacao/files/cursos.txt";
+    private static final String arqDisciplina = "implementacao/files/disciplinas.txt";
     // Construtor
 
     public Sistema() throws IOException, InvalidParameterException{
@@ -28,7 +30,7 @@ public class Sistema {
         this.usuarios = new HashMap<String, Usuario>();
         this.cursos = new HashMap<String, Curso>();
 
-        this.lerUsuarios("implementacao/Secretarios.csv", "implementacao/Professores.csv", "implementacao/Alunos.csv");
+        // this.lerUsuarios("implementacao/Secretarios.csv", "implementacao/Professores.csv", "implementacao/Alunos.csv");
         
     }
 
@@ -151,9 +153,10 @@ public class Sistema {
         if(this.getUsuarioAtual() instanceof Professor){
             List<Aluno> alunos = new ArrayList<>();
             List<Disciplina> todasDisciplinas = this.listarDisciplinas();
-            Disciplina disciplinaSelecionada = new Disciplina("", true, true);
+            Disciplina disciplinaSelecionada = new Disciplina("",null, true, true);
             for (Disciplina d : todasDisciplinas) {
                 if (d.getId() == id) {
+                    disciplinaSelecionada.setCurso(d.getCurso());
                     disciplinaSelecionada.setAlunos(d.getAlunos());
                 }
             }
@@ -165,6 +168,31 @@ public class Sistema {
         }
     }
 
+    public void carregarCursos(){
+
+    }
+
+    public void carregarDisciplinas(){
+
+    }
+
+    public void carregar(){}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException, ExcecaoDisciplinaFechada, ExcecaoDisciplinaComProfessor {
 
         // Lendo Secretarios
@@ -233,57 +261,57 @@ public class Sistema {
         }
     }
 
-     private void lerCursosEDisciplinas(String arquivoCursos, String arquivoDisciplinas) throws IOException, InvalidParameterException {
+
+     */
+
+     private void lerCursos() throws IOException, InvalidParameterException {
 
         // Lendo Cursos
-        try (Scanner scanner = new Scanner(new File(arquivoCursos))) {
+        try (Scanner scanner = new Scanner(new File(arqCursos))) {
             String linha;
             while (scanner.hasNextLine()) {
                 linha = scanner.nextLine();
-                String[] campos = linha.split(",");
+                String[] campos = linha.split(";");
                 String nome = campos[0];
                 int id = Integer.parseInt(campos[1]);
                 int creditos = Integer.parseInt(campos[2]);
-                String[] disciplinaStrings = campos[3].split(";");
  
                 Curso curso = new Curso(nome, id, creditos);
                 this.cursos.put(nome, curso);
 
-                for (String disciplina : disciplinaStrings) {
-                    int idDisciplina = Integer.parseInt(disciplina.trim());
-                    Disciplina d = disciplinas.get(idDisciplina);
-                    if (d != null) {
-                        curso.adicionarDisciplina(d);
-                    }
-                }
-
-            }
-        }
-
-        // Lendo Disciplinas
-        try (Scanner scanner = new Scanner(new File(arquivoDisciplinas))) {
-            String linha;
-            while (scanner.hasNextLine()) {
-                linha = scanner.nextLine();
-                String[] campos = linha.split(",");
-                String nome = campos[0];
-                int id = Integer.parseInt(campos[1]);
-                String senha = campos[2];
-                String professor = campos[3];
-                int inscricoesAbertas = Integer.parseInt(campos[4]);
-                int obrigatoria = Integer.parseInt(campos[5]);
-
-                Disciplina disciplinas = new Disciplina(nome, id, senha, professor, inscricoesAbertas, obrigatoria);
-                this.usuarios.put(usuario, professor);
             }
         }
      }
+
+     public void lerDisciplinas() {
+         try (Scanner scanner = new Scanner(new File(arqDisciplina))) {
+             String linha;
+             while (scanner.hasNextLine()) {
+                 linha = scanner.nextLine();
+                 String[] campos = linha.split(";");
+                 String nome = campos[0];
+                 int id = Integer.parseInt(campos[1]);
+                 String curso = campos[2];
+                 String professor = campos[3];
+                 boolean inscricoesAbertas = Boolean.valueOf(campos[4]);
+                 boolean obrigatoria = Boolean.valueOf(campos[5]);
+
+                 Curso cursoSelecionado = this.cursos.get(curso);
+                 cursoSelecionado.adicionarDisciplinaArquivo(nome, id, inscricoesAbertas, obrigatoria);
+             }
+         } catch (Exception e) {
+             System.out.println(e.getMessage());
+         }
+     }
+
 
     /**
      * Salva as informações dos usuários em arquivos CSV.
      * 
      * @throws IOException Exceção lançada em caso de erro ao salvar os arquivos.
      */
+
+    /*
     public void salvar() throws IOException {
         Map<String, List<Usuario>> mapaDeUsuarios = new HashMap<>();
 
@@ -316,5 +344,6 @@ public class Sistema {
             }
         });
     }
+    */
 
 }

@@ -64,6 +64,16 @@ public class Disciplina {
         this.obrigatoria = obrigatoria;
     }
 
+    public Disciplina(String nome, int id, Curso curso, boolean inscricoesAbertas, boolean obrigatoria) {
+        this.nome = nome;
+        this.id = id;
+        this.curso = curso;
+        this.alunos = new HashMap<Integer,Aluno>();
+        this.professor = null;
+        this.inscricoesAbertas = inscricoesAbertas;
+        this.obrigatoria = obrigatoria;
+    }
+
     // Getters e Setters
 
     public String getNome() {

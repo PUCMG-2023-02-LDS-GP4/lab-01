@@ -3,10 +3,7 @@ package business;
 import exceptions.ExcecaoDisciplinaExistente;
 import exceptions.ExcecaoDisciplinaNaoExistente;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Curso {
 
@@ -29,7 +26,7 @@ public class Curso {
         this.nome = nome;
         this.id = id;
         this.creditos = creditos;
-        this.disciplinas = null;
+        this.disciplinas = new HashMap<Integer, Disciplina>();
     }
 
     // Getters e Setters
@@ -89,12 +86,22 @@ public class Curso {
       * @throws ExcecaoDisciplinaExistente - Exceção para indicar que já existe uma disciplina a ID cadastrada.
      **/
     public void adicionarDisciplina(String nome, Professor professor, boolean inscricoesAbertas, boolean obrigatoria) throws ExcecaoDisciplinaExistente {
-            Disciplina novaDisciplina = new Disciplina(nome, professor, inscricoesAbertas, obrigatoria);
+            Disciplina novaDisciplina = new Disciplina(nome,this, professor, inscricoesAbertas, obrigatoria);
             if(disciplinaJaExistente(novaDisciplina.getId())){
                 throw new ExcecaoDisciplinaExistente();
             } else{
                 this.disciplinas.put(novaDisciplina.getId(), novaDisciplina);
             }
+
+    }
+
+    public void adicionarDisciplinaArquivo(String nome,int id, boolean inscricoesAbertas, boolean obrigatoria) throws ExcecaoDisciplinaExistente {
+        Disciplina novaDisciplina = new Disciplina(nome,this, inscricoesAbertas, obrigatoria);
+        if(disciplinaJaExistente(novaDisciplina.getId())){
+            throw new ExcecaoDisciplinaExistente();
+        } else{
+            this.disciplinas.put(novaDisciplina.getId(), novaDisciplina);
+        }
 
     }
 
@@ -111,5 +118,8 @@ public class Curso {
         }
     }
 
+    public String salvarDados(){
+        return this.nome + ";" + this.id + ";" + this.creditos;
+    }
 
 }

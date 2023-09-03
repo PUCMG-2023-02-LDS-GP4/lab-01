@@ -6,6 +6,10 @@ import business.Sistema;
 import exceptions.ExcecaoUsuarioNaoEncontrado;
 
 public class Main {
+
+
+    static Scanner in = new Scanner(System.in);
+
     public static void main(String[] args) throws InvalidParameterException, IOException, ExcecaoUsuarioNaoEncontrado {
         Sistema s = new Sistema();
         
@@ -26,6 +30,9 @@ public class Main {
         System.out.println("(2) Digite a senha:");
         String senha = scanner.nextLine();       
         s.logar(nomeUsuario, senha);
+    }
+
+    public static void menu(Sistema sistema) throws Exception{
     }
 
 }
