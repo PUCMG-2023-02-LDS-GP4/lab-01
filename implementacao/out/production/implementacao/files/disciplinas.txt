@@ -1,6 +1,0 @@
-AEDS 1;101;Engenharia de Software;true;true
-Cálculo 1;102;Engenharia de Software;true;true
-Fundamentos de Engenharia de Software;103;Engenharia de Software;true;true
-Desenvolvimento Web;104;Engenharia de Software;true;true
-AEDS 2;105;Engenharia de Software;true;true
-Banco de Dados;106;Engenharia de Software;true;true

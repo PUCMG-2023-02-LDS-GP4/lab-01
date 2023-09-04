@@ -238,14 +238,13 @@ public class Sistema {
         }
         if(user instanceof Professor){
             Professor p = (Professor) this.getUsuarios().get(user.getUsuario());
-            System.out.println("Chegou aqui");
-            if(d == null){
+            if(d != null){
+                if(!d.possuiProfessor()) {
+                    p.lecionar(d);
+                }
+            }else{
                 throw new ExcecaoDisciplinaNaoExistente();
             }
-            if(d != null && d.possuiProfessor()){
-                throw new ExcecaoDisciplinaComProfessor();
-            }
-            p.lecionar(d);
         }
     }
 
