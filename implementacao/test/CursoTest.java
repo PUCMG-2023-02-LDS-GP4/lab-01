@@ -13,7 +13,11 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+/**
+ * Classe de testes para a classe {@link Curso}.
+ */
 public class CursoTest {
+
 
     private Curso curso;
     private Professor professor;
@@ -26,12 +30,21 @@ public class CursoTest {
         disciplina = new Disciplina("Nome da Disciplina", curso, professor, true, false);
     }
 
-
+    /**
+     * Testa a remoção de uma disciplina inexistente.
+     * Deve lançar uma exceção {@link ExcecaoDisciplinaNaoExistente}.
+     *
+     * @throws ExcecaoDisciplinaNaoExistente Se a disciplina não existir.
+     */
     @Test(expected = ExcecaoDisciplinaNaoExistente.class)
     public void testRemoverDisciplinaInexistente() throws ExcecaoDisciplinaNaoExistente {
         curso.removerDisciplina(999);
     }
 
+    /**
+     * Testa o método de salvar dados da classe {@link Curso}.
+     * Verifica se os dados são salvos corretamente no formato esperado.
+     */
     @Test
     public void testSalvarDados() {
         String dados = curso.salvarDados();
