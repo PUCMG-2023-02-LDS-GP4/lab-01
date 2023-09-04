@@ -236,16 +236,11 @@ public class Sistema {
                 d = c.getDisciplinas().get(id);
             }
         }
-        if(user instanceof Professor){
-            Professor p = (Professor) this.getUsuarios().get(user.getUsuario());
-            if(d != null){
-                if(!d.possuiProfessor()) {
-                    p.lecionar(d);
-                }
-            }else{
-                throw new ExcecaoDisciplinaNaoExistente();
-            }
+        Professor p = (Professor) this.getUsuarios().get(user.getUsuario());
+        if(d != null && !d.possuiProfessor()) {
+            p.lecionar(d);
         }
+
     }
 
      public void lerCursos() throws IOException, InvalidParameterException {
