@@ -43,6 +43,7 @@ public class Professor extends Usuario{
     public void lecionar(Disciplina d) throws ExcecaoDisciplinaComProfessor {
         if(!d.possuiProfessor()){
             this.disciplinasLecionadas.put(d.getId(), d);
+            d.setProfessor(this);
         } else{
             throw new ExcecaoDisciplinaComProfessor();
         }

@@ -27,7 +27,7 @@ public class Aluno extends Usuario{
 
     public Aluno(String nome, String usuario, String senha) {
         super(nome, usuario, senha);
-
+        this.disciplinas = new HashMap<Integer,Disciplina>();
     }
 
     // Getters e Setters
@@ -77,6 +77,10 @@ public class Aluno extends Usuario{
         }else{
             throw new ExcecaoDisciplinaNaoExistente();
         }
+    }
+
+    public List<Disciplina> listarDisciplinas(){
+        return this.getDisciplinas().values().stream().toList();
     }
 
 }

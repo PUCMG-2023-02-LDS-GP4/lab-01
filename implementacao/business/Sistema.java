@@ -18,11 +18,9 @@ public class Sistema {
     private Usuario usuarioAtual;
     private Map<String, Usuario> usuarios;
     private Map<String,Curso> cursos;
-    private Map<Integer, Disciplina> disciplinas;
-
-    private static final String arqUsuario = "implementacao/files/usuarios.txt";
-    private static final String arqCursos = "implementacao/files/cursos.txt";
-    private static final String arqDisciplina = "implementacao/files/disciplinas.txt";
+    private static final String arqAlunos = "files\\alunos.txt";
+    private static final String arqCursos = "files\\cursos.txt";
+    private static final String arqDisciplina = "files\\disciplinas.txt";
     // Construtor
 
     public Sistema() throws IOException, InvalidParameterException{
@@ -30,7 +28,9 @@ public class Sistema {
         this.usuarios = new HashMap<String, Usuario>();
         this.cursos = new HashMap<String, Curso>();
 
-        // this.lerUsuarios("implementacao/Secretarios.csv", "implementacao/Professores.csv", "implementacao/Alunos.csv");
+        this.lerCursos();
+        this.lerDisciplinas();
+        this.lerAlunos();
         
     }
 
@@ -87,14 +87,12 @@ public class Sistema {
      */
     public void cadastrar(String usuario, String senha, String nome, int tipo) throws ExcecaoUsuarioCadastrado, ExcecaoTipoIncorreto {
         if(!this.usuarios.containsKey(usuario)){
-            switch (tipo){
-                case 1:
+                if(tipo == 1)
                     this.usuarios.put(usuario, new Aluno(usuario, senha, nome));
-                case 2:
+                else if (tipo == 2)
                     this.usuarios.put(usuario, new Professor(usuario, senha, nome));
-                default:
+                else
                     throw new ExcecaoTipoIncorreto();
-            }
         }else{
             throw new ExcecaoUsuarioCadastrado();
         }
@@ -168,103 +166,90 @@ public class Sistema {
         }
     }
 
-    public void carregarCursos(){
+    public void matricular(int id) throws ExcecaoDisciplinaFechada, ExcecaoDisciplinaNaoExistente {
+        Usuario user = this.getUsuarioAtual();
+        Disciplina d = null;
 
-    }
-
-    public void carregarDisciplinas(){
-
-    }
-
-    public void carregar(){}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-    private void lerUsuarios(String arquivoSecretarios, String arquivoProfessores, String arquivoAlunos) throws IOException, InvalidParameterException, ExcecaoDisciplinaFechada, ExcecaoDisciplinaComProfessor {
-
-        // Lendo Secretarios
-        try (Scanner scanner = new Scanner(new File(arquivoSecretarios))) {
-            String linha;
-            while (scanner.hasNextLine()) {
-                linha = scanner.nextLine();
-                String[] campos = linha.split(",");
-                String nome = campos[0];
-                String usuario = campos[1];
-                String senha = campos[2];
- 
-                Secretario secretario = new Secretario(nome, usuario, senha);
-                this.usuarios.put(usuario, secretario);
-
+        List<Curso> cursos = (List<Curso>) this.getCursos().values().stream().toList();
+        for(Curso c : cursos){
+            if(c.getDisciplinas().containsKey(id)){
+                d = c.getDisciplinas().get(id);
             }
         }
-
-        // Lendo Professores
-        try (Scanner scanner = new Scanner(new File(arquivoProfessores))) {
-            String linha;
-            while (scanner.hasNextLine()) {
-                linha = scanner.nextLine();
-                String[] campos = linha.split(",");
-                String nome = campos[0];
-                String usuario = campos[1];
-                String senha = campos[2];
-                String[] disciplinaStrings = campos[3].split(";");
-
-                Professor professor = new Professor(nome, usuario, senha);
-                this.usuarios.put(usuario, professor);
-                
-                for (String disciplina : disciplinaStrings) {
-                    int id = Integer.parseInt(disciplina.trim());
-                    Disciplina d = disciplinas.get(id);
-                    if (d != null) {
-                        professor.lecionar(d);
-                    }
-                }
+        if(user instanceof Aluno){
+            Aluno a = (Aluno) this.getUsuarios().get(user.getUsuario());
+            if(d == null){
+                throw new ExcecaoDisciplinaNaoExistente();
             }
-        }
-
-        // Lendo Alunos
-        try (Scanner scanner = new Scanner(new File(arquivoAlunos))) {
-            String linha;
-            while (scanner.hasNextLine()) {
-                linha = scanner.nextLine();
-                String[] campos = linha.split(",");
-                String nome = campos[0];
-                String usuario = campos[1];
-                String senha = campos[2];
-                int codMatricula = Integer.parseInt(campos[3]);
-                String[] disciplinaStrings = campos[4].split(";");
-                
-                Aluno aluno = new Aluno(nome, usuario, senha);
-                this.usuarios.put(usuario, aluno);
-                
-                for (String disciplina : disciplinaStrings) {
-                    int id = Integer.parseInt(disciplina.trim());
-                    Disciplina d = disciplinas.get(id);
-                    if (d != null) {
-                        aluno.matricular(d);
-                    }
-                }
-            }
+            a.matricular(d);
+            System.out.println("Você se matriculou na disciplina: " + d.getNome());
         }
     }
 
+    public void trancarMatriculaAluno(int id) throws ExcecaoDisciplinaNaoExistente {
+        Usuario user = this.getUsuarioAtual();
 
-     */
+        if(user instanceof Aluno){
+            Aluno a = (Aluno) this.getUsuarios().get(user.getUsuario());
+            Disciplina d = a.getDisciplinas().get(id);
+            a.trancarMatricula(id);
+            System.out.println("Você foi desmatriculado da disciplina: " + d.getNome());
+        }else{
+            throw new ExcecaoDisciplinaNaoExistente();
+        }
+    }
 
-     private void lerCursos() throws IOException, InvalidParameterException {
+    public List<Disciplina> listarDisciplinasAluno(){
+        Usuario user = this.getUsuarioAtual();
+        List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+        if(user instanceof Aluno){
+            Aluno a = (Aluno) this.getUsuarios().get(user.getUsuario());
+            disciplinas = a.listarDisciplinas();
+            return disciplinas;
+        }
+        return disciplinas;
+    }
+
+    public List<Usuario> listarAlunosSistema() {
+        List<Usuario> alunos = new ArrayList<>();
+        alunos = this.getUsuarios().values().stream().filter((u) -> u instanceof Aluno).toList();
+        return alunos;
+    }
+
+    public List<Disciplina> listarDisciplinasProfessor(){
+        Usuario user = this.getUsuarioAtual();
+        List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+        if(user instanceof Professor){
+            Professor p = (Professor) this.getUsuarios().get(user.getUsuario());
+            disciplinas = p.getDisciplinasLecionadas().values().stream().toList();
+            return disciplinas;
+        }
+        return disciplinas;
+    }
+
+    public void lecionarProfessor(int id) throws ExcecaoDisciplinaComProfessor, ExcecaoDisciplinaNaoExistente {
+        Usuario user = this.getUsuarioAtual();
+        Disciplina d = null;
+        List<Curso> cursos = (List<Curso>) this.getCursos().values().stream().toList();
+        for(Curso c : cursos){
+            if(c.getDisciplinas().containsKey(id)){
+                d = c.getDisciplinas().get(id);
+            }
+        }
+        if(user instanceof Professor){
+            Professor p = (Professor) this.getUsuarios().get(user.getUsuario());
+            System.out.println("Chegou aqui");
+            if(d == null){
+                throw new ExcecaoDisciplinaNaoExistente();
+            }
+            if(d != null && d.possuiProfessor()){
+                throw new ExcecaoDisciplinaComProfessor();
+            }
+            p.lecionar(d);
+        }
+    }
+
+     public void lerCursos() throws IOException, InvalidParameterException {
 
         // Lendo Cursos
         try (Scanner scanner = new Scanner(new File(arqCursos))) {
@@ -292,9 +277,9 @@ public class Sistema {
                  String nome = campos[0];
                  int id = Integer.parseInt(campos[1]);
                  String curso = campos[2];
-                 String professor = campos[3];
-                 boolean inscricoesAbertas = Boolean.valueOf(campos[4]);
-                 boolean obrigatoria = Boolean.valueOf(campos[5]);
+                 boolean inscricoesAbertas = Boolean.valueOf(campos[3]);
+                 boolean obrigatoria = Boolean.valueOf(campos[4]);
+
 
                  Curso cursoSelecionado = this.cursos.get(curso);
                  cursoSelecionado.adicionarDisciplinaArquivo(nome, id, inscricoesAbertas, obrigatoria);
@@ -303,6 +288,25 @@ public class Sistema {
              System.out.println(e.getMessage());
          }
      }
+
+    public void lerAlunos() {
+        try (Scanner scanner = new Scanner(new File(arqAlunos))) {
+            String linha;
+            while (scanner.hasNextLine()) {
+                linha = scanner.nextLine();
+                String[] campos = linha.split(";");
+                String nome = campos[0];
+                String usuario = campos[1];
+                String senha = campos[2];
+                int matricula = Integer.parseInt(campos[3]);
+
+                Aluno novoAluno = new Aluno(nome, usuario, senha, matricula);
+                this.usuarios.put(usuario, novoAluno);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
     /**
